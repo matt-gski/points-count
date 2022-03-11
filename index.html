@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liczarz punktów</title>
+    <style>
+        .noborder {
+            border: 0px;
+        }
+        #ranking-table tbody tr, #ranking-table tbody td {
+            min-height: 20px;
+        }
+    </style>
+</head>
+<body>
+    <table id="ranking-table" border="1" cellspacing="0" cellpadding="0">
+        <thead>
+            <tr>
+                <td>Imię</td>
+                <td>Punkty</td>
+                <td>Akcje</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td colspan="3" style="text-align: right;">
+                    <button onclick="noweImię()">Nowe imię</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <script>
+        var TABLE_ID = 'ranking-table'
+        function noweImię(podajImię = true, dodajControls = true) {
+            var row = document.createElement('tr')
+            row.innerHTML='<td/><td/><td/>'
+            var t = document.getElementById(TABLE_ID);
+            var lastRow = t.querySelector('tbody *:last-child')
+            if (podajImię) {
+                row.querySelector('td').textContent = prompt('podaj imię')
+            }
+            if (dodajControls) {
+                row.querySelectorAll('td')[1].innerHTML = '0'
+                row.querySelectorAll('td')[2].innerHTML = 
+                '<button onmousedown="longHold(this)" onclick="pkt(this)" ondblclick="pkt(this, -3)" title="przytrzymaj przez 5s lub podwójny klik, by zmniejszyć">dodaj</button>'
+            }
+            t.querySelector('tbody').insertBefore(row, lastRow)
+        }
+        function pkt(e, amount = 1) {
+            var el = e.parentElement.previousSibling
+            el.textContent = parseInt(el.textContent) + amount
+        }
+        function longHold(e) {
+            var timeStart = new Date().getTime() / 1000
+            console.log('mousedown', mouseUp)
+            const timeoutid = setTimeout(() => {
+                pkt(e, -2)
+                e.removeEventListener('mouseup', mouseUp)
+            }, 5000)
+            function mouseUp() {
+                e.removeEventListener('mouseup', mouseUp)
+                var timeEnd = new Date().getTime() / 1000
+                console.info('mouseup', timeStart, timeEnd, timeEnd - timeStart)
+                if (timeEnd - timeStart < 5) {
+                    clearTimeout(timeoutid)
+                }
+                if (timeEnd - timeStart > 5) {
+                    // pkt(e, -2)
+                }
+            }
+            e.addEventListener('mouseup', mouseUp)
+            setTimeout(() => {
+                // e.removeEventListener('mouseup', mouseUp)
+            }, 10000)
+        }
+    </script>
+</body>
+</html>
