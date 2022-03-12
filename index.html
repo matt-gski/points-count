@@ -37,7 +37,7 @@
             var row = document.createElement('tr')
             row.innerHTML='<td/><td/><td/>'
             var t = document.getElementById(TABLE_ID);
-            var lastRow = t.querySelector('tbody *:last-child')
+            var lastRow = t.querySelector('tbody tr:last-child')
             if (podajImię) {
                 row.querySelector('td').textContent = prompt('podaj imię')
             }
